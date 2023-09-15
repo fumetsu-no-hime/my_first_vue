@@ -183,7 +183,7 @@ return [
         |
         */
 
-        'snake_attributes' => true,
+        'snake_attributes' => false,
 
         /*
         |--------------------------------------------------------------------------
@@ -196,7 +196,7 @@ return [
         |
         */
 
-        'indent_with_space' => 0,
+        'indent_with_space' => 4,
 
         /*
         |--------------------------------------------------------------------------
@@ -285,6 +285,7 @@ return [
             'password_resets',
             'personal_access_tokens',
             'password_reset_tokens',
+            'users',
         ],
 
         /*

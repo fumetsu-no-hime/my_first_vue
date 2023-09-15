@@ -21,9 +21,9 @@ return [
 
     'ssr' => [
 
-        'enabled' => true,
+        'enabled' => env('SSR_ENABLED', false),
 
-        'url' => 'http://127.0.0.1:13714',
+        'url' => 'http://127.0.0.1:' . env('VITE_PUSHER_SSR_PORT', 13714),
 
         // 'bundle' => base_path('bootstrap/ssr/ssr.mjs'),
 
