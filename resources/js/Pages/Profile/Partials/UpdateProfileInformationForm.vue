@@ -6,15 +6,15 @@ import TextInput from '@/Components/TextInput.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 
 const props = defineProps({
-    mustVerifyEmail: Boolean,
-    status: String,
+  mustVerifyEmail: Boolean,
+  status: String,
 });
 
 const user = usePage().props.auth.user;
 
 const form = useForm({
-    name: user.name,
-    email: user.email,
+  name: user.name,
+  email: user.email,
 });
 </script>
 

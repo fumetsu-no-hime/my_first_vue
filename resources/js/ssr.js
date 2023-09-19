@@ -13,31 +13,31 @@ const ssrPort = import.meta.env.VITE_PUSHER_SSR_PORT ?? 13714;
 const pinia = createPinia();
 
 createServer((page) =>
-    createInertiaApp({
-        page,
-        render: renderToString,
-        title: (title) => title ? `${title} - ${appName}` : appName,
-        resolve: (name) => {
-            const pages = resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue'));
-            pages.then(module => module.default.layout = AppLayout);
-            return pages;
-        },
-        setup({ App, props, plugin }) {
-            const Ziggy = {
-                ...page.props.ziggy,
-                location: new URL(page.props.ziggy.location),
-            };
+  createInertiaApp({
+    page,
+    render: renderToString,
+    title: (title) => title ? `${title} - ${appName}` : appName,
+    resolve: (name) => {
+      const pages = resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue'));
+      pages.then(module => module.default.layout = AppLayout);
+      return pages;
+    },
+    setup({ App, props, plugin }) {
+      const Ziggy = {
+        ...page.props.ziggy,
+        location: new URL(page.props.ziggy.location),
+      };
 
-            global.route = (name, params, absolute, config = Ziggy) => route(name, params, absolute, config);
+      global.route = (name, params, absolute, config = Ziggy) => route(name, params, absolute, config);
 
-            return createSSRApp({ render: () => h(App, props) })
-                .use(plugin)
-                .use(pinia)
-                .use(ZiggyVue, Ziggy)
-                .component('Link', Link)
-                .component('Head', Head);
-        },
-        progress: false,
-    }),
-    ssrPort,
+      return createSSRApp({ render: () => h(App, props) })
+        .use(plugin)
+        .use(pinia)
+        .use(ZiggyVue, Ziggy)
+        .component('Link', Link)
+        .component('Head', Head);
+    },
+    progress: false,
+  }),
+ssrPort,
 );

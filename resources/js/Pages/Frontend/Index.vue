@@ -1,20 +1,20 @@
 <script>
 export default {
-    props: {
-        response: {
-            type: Object,
-            required: false,
-            default: () => ({}),
-        },
+  props: {
+    response: {
+      type: Object,
+      required: false,
+      default: () => ({}),
     },
-    data() {
-        return {
-            title: 'Hello World !',
-        };
-    },
-    created() {
-        // console.log(this.response);
-    },
+  },
+  data() {
+    return {
+      title: 'Hello World !',
+    };
+  },
+  created() {
+    // console.log(this.response);
+  },
 };
 </script>
 
