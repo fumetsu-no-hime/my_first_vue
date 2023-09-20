@@ -1,9 +1,9 @@
 <script>
-import ProductCart from '@/Components/Cart/ProductCart.vue';
+// import ProductCart from '@/Components/Cart/ProductCart.vue';
 
 export default {
   components: {
-    ProductCart,
+    // ProductCart,
   },
   props: {
     response: {
@@ -30,7 +30,7 @@ export default {
       <Link :href="route('register')" class="btn-base">註冊</Link>
       <Link :href="route('dashboard')" class="btn-base">登入</Link>
     </div>
-    <div class="flex gap-[30px] ">
+    <div class="flex gap-[30px] flex-wrap">
       <!-- <div v-for="item in response.rt_data ?? []" :key="item.id" class="card">
         <div class="name"><img :src="item.image" class="w-[200px] aspect-[4/3] object-cover" alt=""></div>
         <div class="name">商品名稱 : {{ item.name }}</div>
