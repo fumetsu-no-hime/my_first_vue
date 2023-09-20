@@ -12,6 +12,7 @@ export default {
     return {
       formData: {
         name: '',
+        image: '',
         price: '',
         public: '',
         desc: '',
@@ -42,6 +43,17 @@ export default {
         },
       });
     },
+    uploadImage(e) {
+      const { formData } = this;
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = function () {
+        formData.image = reader.result;
+      };
+      reader.onerror = (error) => {
+        console.log('Error: ', error);
+      };
+    }
   }
 };
 </script>
@@ -57,24 +69,34 @@ export default {
     <section id="product-create" class="px-[15px] py-[10px] rounded-[6px]">
       <form @submit.prevent="submitData()">
         <label for="">
-          商品名稱
-          <input v-model="formData.name" type="text" required>
+          商品名稱:
+          <input v-model="formData.name" name="name" type="text" required>
+        </label>
+        <label>
+          商品照片:
+          <div class="relative inline-block">
+            <div v-if="!formData.image" class="w-[200px] border aspect-[4/3] flex justify-center items-center text-[48px] cursor-pointer">
+              +
+            </div>
+            <img v-else :src="formData.image" class="w-[200px] aspect-[4/3] object-cover" alt="">
+            <input class="absolute top-1/2 left-1/2 w-[1px] h-[1px] opacity-0 translate-y-[10px]" name="image" type="file" required @change="(e) => uploadImage(e)">
+          </div>
         </label>
         <label for="">
           商品價格
-          <input v-model="formData.price" type="text" required>
+          <input v-model="formData.price" name="price" type="text" required>
         </label>
         <div class="flex items-center gap-[10px]">公開/非公開
           <label>
-            <input v-model="formData.public" type="radio" value="1" required>公開
+            <input v-model="formData.public" name="public" type="radio" value="1" required>公開
           </label>
           <label>
-            <input v-model="formData.public" type="radio" value="2">不公開
+            <input v-model="formData.public" name="public" type="radio" value="2">不公開
           </label>
         </div>
         <label for="">
           商品描述
-          <input v-model="formData.desc" type="text">
+          <input v-model="formData.desc" name="desc" type="text">
         </label>
         <div class="flex justify-center items-center gap-[45px]">
           <button type="button" class="btn">取消新增</button>
