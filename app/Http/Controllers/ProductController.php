@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Services\FileService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -44,6 +45,13 @@ class ProductController extends Controller
             'image' => $this->FileService->base64Upload($request->image, 'product'),
         ]);
 
+        foreach ($request->otherImage ?? [] as $key => $value) {
+            ProductImage::create([
+                'product_id' => $product->id,
+                'image' => $this->FileService->base64Upload($value['image'], 'otherImage'),
+            ]);
+        }
+
         return back()->with(['message' => rtFormat($product)]);
     }
 
@@ -66,7 +74,7 @@ class ProductController extends Controller
         if (!$product) {
             return redirect(route('product.list'))->with(['message' => rtFormat($id, 0, '查無資料')]);
         }
-        return Inertia::render('Backend/Product/EditProduct', ['resp'=>rtFormat($product)]);
+        return Inertia::render('Backend/Product/EditProduct', ['response'=>rtFormat($product)]);
     }
 
     public function product_update(Request $request)
@@ -101,6 +109,7 @@ class ProductController extends Controller
             'price' => $formData->price,
             'public' => $formData->public,
             'desc' => $formData->desc,
+            'image' => $this->FileService->base64Upload($formData->image, 'product'),
         ]);
 
         return back()->with(['message' => rtFormat($product)]);

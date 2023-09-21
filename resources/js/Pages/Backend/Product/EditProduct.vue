@@ -59,6 +59,17 @@ export default {
       if (!item) return '';
       return 'border-[red] rounded-[5px]';
     },
+    uploadImage(e) {
+      const { formData } = this;
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = function () {
+        formData.image = reader.result;
+      };
+      reader.onerror = (error) => {
+        console.log('Error: ', error);
+      };
+    }
   }
 };
 </script>
@@ -85,7 +96,7 @@ export default {
               +
             </div>
             <img v-else :src="formData.image" class="w-[200px] aspect-[4/3] object-cover" alt="">
-            <input class="absolute top-1/2 left-1/2 w-[1px] h-[1px] opacity-0 translate-y-[10px]" name="image" type="file" required @change="(e) => uploadImage(e)">
+            <input class="absolute top-1/2 left-1/2 w-[1px] h-[1px] opacity-0 translate-y-[10px]" name="image" type="file" @change="(e) => uploadImage(e)">
           </div>
         </label>
         <label>
@@ -106,7 +117,7 @@ export default {
           <input v-model="formData.desc" type="text">
         </label>
         <div class="flex justify-center items-center gap-[45px]">
-          <button type="button" class="btn">取消編輯</button>
+          <Link :href="route('product.list')" class="btn">取消編輯</Link>
           <button type="submit" class="btn">更新</button>
         </div>
       </form>

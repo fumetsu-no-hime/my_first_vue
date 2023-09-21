@@ -13,15 +13,21 @@ export default {
       formData: {
         name: '',
         image: '',
+        otherImage: [],
         price: '',
         public: '',
         desc: '',
-      }
+      },
+      imageSize: 0,
     };
+  },
+  computed: {
+
   },
   methods: {
     submitData() {
       // 驗證
+      if (this.imageSize > 3145728) return Swal.fire('圖片檔案過大');
       router.visit(route('product.store'), {
         method: 'post',
         data: this.formData,
@@ -44,16 +50,30 @@ export default {
       });
     },
     uploadImage(e) {
-      const { formData } = this;
       const reader = new FileReader();
       reader.readAsDataURL(e.target.files[0]);
-      reader.onload = function () {
-        formData.image = reader.result;
+      reader.onload = () => {
+        this.formData.image = reader.result;
+        this.imageSize += e.target.files[0].size;
       };
-      reader.onerror = (error) => {
-        console.log('Error: ', error);
+    },
+    uploadOtherImage(e) {
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = () => {
+        this.formData.otherImage.push({
+          id: Math.max(0, ...this.formData.otherImage.map(item => item.id)) + 1,
+          image: reader.result,
+          size: e.target.files[0].size,
+        //   sort: this.formDta.otherImage.length + 1,
+        });
+        this.imageSize += e.target.files[0].size;
       };
-    }
+    },
+    removeImage(id) {
+      this.imageSize -= this.formData.otherImage.find((item) => item.id === id).size;
+      this.formData.otherImage = this.formData.otherImage.filter((item) => item.id !== id);
+    },
   }
 };
 </script>
@@ -82,7 +102,18 @@ export default {
             <input class="absolute top-1/2 left-1/2 w-[1px] h-[1px] opacity-0 translate-y-[10px]" name="image" type="file" required @change="(e) => uploadImage(e)">
           </div>
         </label>
-        <label for="">
+        其他照片:
+        <div class="flex flex-wrap">
+          <div v-for="item in formData.otherImage" :key="item.id" class="relative me-3">
+            <img :src="item.image" alt="" class="w-[200px] border aspect-[4/3] flex justify-center items-center text-[48px] object-cover">
+            <button type="button" class="rounded-full w-[15px] h-[15px] flex justify-center items-center bg-[red] text-white absolute top-0 right-0 translate-x-1/2 -translate-y-1/2" @click="removeImage(item.id)">X</button>
+          </div>
+        </div>
+        <label class="w-[200px] border aspect-[4/3] flex justify-center items-center text-[48px] cursor-pointer">
+          +
+          <input type="file" class="hidden" @change="(e) => uploadOtherImage(e)">
+        </label>
+        <label>
           商品價格
           <input v-model="formData.price" name="price" type="text" required>
         </label>
@@ -99,7 +130,7 @@ export default {
           <input v-model="formData.desc" name="desc" type="text">
         </label>
         <div class="flex justify-center items-center gap-[45px]">
-          <button type="button" class="btn">取消新增</button>
+          <Link :href="route('product.list')" class="btn">取消新增</Link>
           <button type="submit" class="btn">確認新增</button>
         </div>
       </form>
